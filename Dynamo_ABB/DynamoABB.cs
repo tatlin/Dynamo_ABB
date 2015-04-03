@@ -75,8 +75,16 @@ namespace Dynamo_ABB
         public static RobTarget TargetAtPoint(Point point)
         {
             var target = new RobTarget();
-            target.FillFromString2(string.Format("[[{0},{1},{2}],[0.000000,0.000000,-1.000000,0.000000082],[0,-1,0,1],[9E9,9E9,9E9,9E9,9E9,9E9]];", point.X, point.Y, point.Z));
+            if (point != null)
+            {
+                target.FillFromString2(
+                    string.Format(
+                        "[[{0},{1},{2}],[0.000000,0.000000,-1.000000,0.000000082],[0,-1,0,1],[9E9,9E9,9E9,9E9,9E9,9E9]];",
+                        point.X, point.Y, point.Z));
+                //return target;
+            }
             return target;
+
         }
 
         /// <summary>
@@ -116,6 +124,7 @@ namespace Dynamo_ABB
                                             "\tPROC main()\n"+
                                             "\n"+
                                             "\t\tConfL \\Off;\n"+
+                                            "\t\tSingArea\\Wrist;\n" +
                                             "\t\trStart;\n"+
                                             "\t\tRETURN;\n"+
                                             "\tENDPROC\n"+
@@ -191,12 +200,21 @@ namespace Dynamo_ABB
                             return false;
                         }
                         
-                        using (var task = controller.Rapid.GetTask("T_ROB1"))
+                        using (var task = controller.Rapid.GetTask("T_ROB1")) // note the task name needs to be set up like this in Robot Studio
                         {
                             // read data from file
                             task.LoadProgramFromFile("Dynamo.prg", RapidLoadMode.Replace);
                             task.LoadModuleFromFile(fileName, RapidLoadMode.Add);
-                            task.ResetProgramPointer();
+                            try
+                            {
+                                task.ResetProgramPointer();//seems to get hung up here.
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine(ex.Message.ToString());
+                                throw;
+                            }
+
                             var result = task.Start(true);
                             Debug.WriteLine(result.ToString());
                         }
