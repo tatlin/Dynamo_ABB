@@ -138,7 +138,7 @@ namespace Dynamo_ABB
             {
                 var rapid = string.Format("MODULE MainModule\n"+
                                             "\tPERS tooldata tPen:=[TRUE,[[-50.828842163,-0.015067339,170.179992676],[1,0,0,0]],[1,[-46.200036966,0.000035189,42.434212285],[1,0,0,0],0,0,0]];\n"+
-                                            "\tTASK PERS wobjdata WobjPad:=[FALSE,TRUE," + @"""""" + ",[[-295.62617401,17.579148369,72.979639055],[1,0,0,0]],[[0,0,0],[1,0,0,0]]];\n"+ 
+                                            "\tTASK PERS wobjdata WobjPad:=[FALSE,TRUE," + @"""""" + ",[[300, -200, 0],[1,0,0,0]],[[0,0,0],[1,0,0,0]]];\n"+ 
                                             "\t! targets for curve\n"+
                                             "{0}\n"+
                                             "\t! Main routine\n"+
