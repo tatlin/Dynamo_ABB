@@ -8,10 +8,24 @@ using ABB.Robotics.Controllers.Discovery;
 using ABB.Robotics.Controllers.RapidDomain;
 using Autodesk.DesignScript.Geometry;
 
+
 namespace Dynamo_ABB
 {
     public class DynamoABB
     {
+        public static Pose RobotPose(Point translation, double q1, double q2, double q3, double q4)
+        {
+            var r = new Pose();
+            r.Trans.X = (float)translation.X;
+            r.Trans.Y = (float)translation.Y;
+            r.Trans.Z = (float)translation.Z;
+            r.Rot.Q1 = (float)q1;
+            r.Rot.Q2 = (float)q2;
+            r.Rot.Q3 = (float)q3;
+            r.Rot.Q4 = (float)q4;
+            return r;
+        }
+
         /// <summary>
         /// Set a rapid data object's value in the specified module.
         /// </summary>
@@ -93,7 +107,7 @@ namespace Dynamo_ABB
         /// <param name="targets">A list of targets.</param>
         /// <param name="filePath">A file path.</param>
         /// <returns></returns>
-        public static string WriteRapidFile(List<RobTarget> targets, string filePath)
+        public static string WriteRapidFile(List<RobTarget> targets, string filePath, Pose toolPose, Pose workPose, double speed = 100, double zone = 1)
         {
             var targetIds = new List<string>();
 
@@ -110,14 +124,14 @@ namespace Dynamo_ABB
             var moveBuilder = new StringBuilder();
             foreach (var id in targetIds)
             {
-                moveBuilder.AppendLine(string.Format("\t\tMoveL {0},v100,z1,tPen\\WObj:=WobjPad;", id));
+                moveBuilder.AppendLine(string.Format("\t\tMoveL {0},v{1},z{2},tPen\\WObj:=WobjPad;", id, speed, zone));
             }
 
             using (var tw = new StreamWriter(filePath, false))
             {
                 var rapid = string.Format("MODULE MainModule\n"+
-                                            "\tPERS tooldata tPen:=[TRUE,[[-50.828842163,-0.015067339,170.179992676],[1,0,0,0]],[1,[-46.200036966,0.000035189,42.434212285],[1,0,0,0],0,0,0]];\n"+
-                                            "\tTASK PERS wobjdata WobjPad:=[FALSE,TRUE," + @"""""" + ",[[-295.62617401,17.579148369,72.979639055],[1,0,0,0]],[[0,0,0],[1,0,0,0]]];\n"+ 
+                                            string.Format("\tPERS tooldata tPen:=[TRUE,{0},[1,[{1},{2},{3}],[1,0,0,0],0,0,0]];\n", toolPose.ToString(), toolPose.Trans.X/2, toolPose.Trans.Y/2, toolPose.Trans.Z/2) +
+                                            string.Format("\tTASK PERS wobjdata WobjPad:=[FALSE,TRUE," + @"""""" + ",{0},[[0,0,0],[1,0,0,0]]];\n", workPose.ToString()) + 
                                             "\t! targets for curve\n"+
                                             "{0}\n"+
                                             "\t! Main routine\n"+
