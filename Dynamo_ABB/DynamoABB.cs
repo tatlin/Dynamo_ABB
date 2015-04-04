@@ -7,6 +7,7 @@ using ABB.Robotics.Controllers;
 using ABB.Robotics.Controllers.Discovery;
 using ABB.Robotics.Controllers.RapidDomain;
 using Autodesk.DesignScript.Geometry;
+using DynamoABB;
 
 
 namespace Dynamo_ABB
@@ -101,6 +102,26 @@ namespace Dynamo_ABB
 
         }
 
+        /// <summary>
+        /// Create a Robot target from a plane.
+        /// </summary>
+        /// <param name="p">The point.</param>
+        /// <returns></returns>
+        public static RobTarget TargetAtPlane(Plane plane)
+        {
+            var target = new RobTarget();
+            if (plane != null)
+            {
+                List<double> quatDoubles = RobotUtils.PlaneToQuaternian(plane);
+                target.FillFromString2(
+                    string.Format(
+                        "[[{0},{1},{2}],[{3},{4},{5},{6}],[0,-1,0,1],[9E9,9E9,9E9,9E9,9E9,9E9]];",
+                        plane.Origin.X, plane.Origin.Y, plane.Origin.Z, quatDoubles[0], quatDoubles[1], quatDoubles[2], quatDoubles[3]));
+                //return target;
+            }
+            return target;
+
+        }
         /// <summary>
         /// Write a Rapid file from a set of targets.
         /// </summary>
