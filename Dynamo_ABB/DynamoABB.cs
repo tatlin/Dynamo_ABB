@@ -102,6 +102,21 @@ namespace Dynamo_ABB
 
         }
 
+        public static RobTarget TargetAtPointAndOrient(Point point, double q1, double q2, double q3, double q4, double conf1, double conf2, double conf3, double conf4)
+        {
+            var target = new RobTarget();
+            if (point != null)
+            {
+                target.FillFromString2(
+                    string.Format(
+                        "[[{0},{1},{2}],[{3},{4},{5},{6}],[0,-1,0,0],[9E9,9E9,9E9,9E9,9E9,9E9]];",
+                        point.X, point.Y, point.Z, q1, q2, q3, q4, conf1, conf2, conf3, conf4));
+                //return target;
+            }
+            return target;
+
+        }
+
         /// <summary>
         /// Create a Robot target from a plane.
         /// </summary>
