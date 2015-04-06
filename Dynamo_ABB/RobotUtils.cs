@@ -10,16 +10,16 @@ namespace DynamoABB
     internal class RobotUtils
     {
         /// <summary>
-        /// Create a list of 4 Quaternian values from a Plane based on it's principle vectors.
+        /// Create a list of 4 Quaternion values from a Plane based on it's principle vectors.
         /// </summary>
         /// <param name="plane">The plane.</param>
-        ///  <param name="list of doubles ">The 4 Quaternian values for the Plane.</param>
+        ///  <param name="list of doubles ">The 4 Quaternion values for the Plane.</param>
         /// <returns></returns>
 
-        public static List<double> PlaneToQuaternian(Plane plane)
+        public static List<double> PlaneToQuaternion(Plane plane)
         {
 
-            //implemented PlaneToQuaternian based on logic from the 
+            //implemented PlaneToQuaternion based on logic from the 
             //Design Robotics Group @ Harvard Gsd with contributions from Sola Grantham, Anthony Kane, Nathan King, Jonathan Grinham, and others. 
             //converted to Dynamo_ABB utility function at the Virginia Tech Robot Summit
 
